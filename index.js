@@ -1,60 +1,47 @@
-//Game配列
-//毎回桁数を導きだすのは如何に？
-//ダイヤ数(実個数)
-
-
-//桁に対応する単位を求める関数 ","の数を返す?
-// 1,000,000 = 2 (milion)
-// 1,000,000,000 = 3 (milion)
-//これによって単位の配列に[ans-2]でアクセスできる？
-
-//桁単位を与えると
-// 表示数を返す
+//毎回桁数を導きだすのは如何に？(負荷的に)
 
 //#region regular functions
-let Utilities = {
-    "escape": (str) => {
-        return str.replace(/[^a-zA-Z0-9@*_+\-./]/g, (m) => {
-            const code = m.charCodeAt(0)
-            if (code <= 0xff) {
-                return '%' + ('00' + code.toString(16)).slice(-2).toUpperCase()
+let escape = (str) => {
+    return str.replace(/[^a-zA-Z0-9@*_+\-./]/g, (m) => {
+        const code = m.charCodeAt(0)
+        if (code <= 0xff) {
+            return '%' + ('00' + code.toString(16)).slice(-2).toUpperCase()
+        } else {
+            return '%u' + ('0000' + code.toString(16)).slice(-4).toUpperCase()
+        }
+    })
+}
+let unescape = (str) => {
+    let d = (st) => {
+        let i = 0
+        for (let j = 0; j < st.length; j++) {
+            if (st[j] === '0') i++
+            else break
+        }
+        return st.slice(i)
+    }
+    let s = (st, start, range) => {
+        let s = ''
+        for (let i = 0; i < range; i++) {
+            s += st[start + i + 1]
+        }
+        return s
+    }
+    let res = ''
+    for (let i = 0; i < str.length; i++) {
+        if (/[a-zA-Z0-9@*_+\-./]/g.test(str[i])) {
+            res += str[i]
+        } else if (str[i] === '%') {
+            if (str[i + 1] === 'u') {
+                i += 5
+                res += String.fromCharCode(Number.parseInt(d(s(str, i - 4, 4)), 16))
             } else {
-                return '%u' + ('0000' + code.toString(16)).slice(-4).toUpperCase()
-            }
-        })
-    },
-    "unescape": (str) => {
-        let d = (st) => {
-            let i = 0
-            for (let j = 0; j < st.length; j++) {
-                if (st[j] === '0') i++
-                else break
-            }
-            return st.slice(i)
-        }
-        let s = (st, start, range) => {
-            let s = ''
-            for (let i = 0; i < range; i++) {
-                s += st[start + i + 1]
-            }
-            return s
-        }
-        let res = ''
-        for (let i = 0; i < str.length; i++) {
-            if (/[a-zA-Z0-9@*_+\-./]/g.test(str[i])) {
-                res += str[i]
-            } else if (str[i] === '%') {
-                if (str[i + 1] === 'u') {
-                    i += 5
-                    res += String.fromCharCode(Number.parseInt(d(s(str, i - 4, 4)), 16))
-                } else {
-                    i += 2
-                    res += String.fromCharCode(Number.parseInt(d(s(str, i - 2, 2)), 16))
-                }
+                i += 2
+                res += String.fromCharCode(Number.parseInt(d(s(str, i - 2, 2)), 16))
             }
         }
-        return res
-    },
+    }
+    return res
 }
 
 localStorageGet = function (key) {
@@ -65,26 +52,41 @@ localStorageSet = function (key, str) {
 }
 //#endregion
 
-//#region game data
+//#region game
 let numFormats = {
     "long": [' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion', ' sextillion', ' septillion', ' octillion', ' nonillion', ' decillion', ' undecillion', ' duodecillion', ' tredecillion', ' quattuordecillion', ' quindecillion', ' sexdecillion', ' septendecillion', ' octodecillion', ' novemdecillion', ' vigintillion', ' unvigintillion', ' duovigintillion', ' trevigintillion', ' quattuorvigintillion', ' quinvigintillion', ' sexvigintillion', ' septenvigintillion', ' octovigintillion', ' novemvigintillion', ' trigintillion', ' untrigintillion', ' duotrigintillion', ' tretrigintillion', ' quattuortrigintillion', ' quintrigintillion', ' sextrigintillion', ' septentrigintillion', ' octotrigintillion', ' novemtrigintillion', ' quadragintillion', ' unquadragintillion', ' duoquadragintillion', ' trequadragintillion', ' quattuorquadragintillion', ' quinquadragintillion', ' sexquadragintillion', ' septenquadragintillion', ' octoquadragintillion', ' novemquadragintillion', ' quinquagintillion', ' unquinquagintillion', ' duoquinquagintillion', ' trequinquagintillion', ' quattuorquinquagintillion', ' quinquinquagintillion', ' sexquinquagintillion', ' septenquinquagintillion', ' octoquinquagintillion', ' novemquinquagintillion', ' sexagintillion', ' unsexagintillion', ' duosexagintillion', ' tresexagintillion', ' quattuorsexagintillion', ' quinsexagintillion', ' sexsexagintillion', ' septensexagintillion', ' octosexagintillion', ' novemsexagintillion', ' septuagintillion', ' unseptuagintillion', ' duoseptuagintillion', ' treseptuagintillion', ' quattuorseptuagintillion', ' quinseptuagintillion', ' sexseptuagintillion', ' septenseptuagintillion', ' octoseptuagintillion', ' novemseptuagintillion', ' octogintillion', ' unoctogintillion', ' duooctogintillion', ' treoctogintillion', ' quattuoroctogintillion', ' quinoctogintillion', ' sexoctogintillion', ' septenoctogintillion', ' octooctogintillion', ' novemoctogintillion', ' nonagintillion', ' unnonagintillion', ' duononagintillion', ' trenonagintillion', ' quattuornonagintillion', ' quinnonagintillion', ' sexnonagintillion', ' septennonagintillion', ' octononagintillion', ' novemnonagintillion'],
     "short": ['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', ' UnD', ' DoD', ' TrD', ' QaD', ' QiD', ' SxD', ' SpD', ' OcD', ' NoD', ' V', ' UnV', ' DoV', ' TrV', ' QaV', ' QiV', ' SxV', ' SpV', ' OcV', ' NoV', ' T', ' UnT', ' DoT', ' TrT', ' QaT', ' QiT', ' SxT', ' SpT', ' OcT', ' NoT', ' Qa', ' UnQa', ' DoQa', ' TrQa', ' QaQa', ' QiQa', ' SxQa', ' SpQa', ' OcQa', ' NoQa', ' Qi', ' UnQi', ' DoQi', ' TrQi', ' QaQi', ' QiQi', ' SxQi', ' SpQi', ' OcQi', ' NoQi', ' Sx', ' UnSx', ' DoSx', ' TrSx', ' QaSx', ' QiSx', ' SxSx', ' SpSx', ' OcSx', ' NoSx', ' Sp', ' UnSp', ' DoSp', ' TrSp', ' QaSp', ' QiSp', ' SxSp', ' SpSp', ' OcSp', ' NoSp', ' O', ' UnO', ' DoO', ' TrO', ' QaO', ' QiO', ' SxO', ' SpO', ' OcO', ' NoO', ' N', ' UnN', ' DoN', ' TrN', ' QaN', ' QiN', ' SxN', ' SpN', ' OcN', ' NoN']
 }
-let numFormatters = [
+let numFormatters = [] 
+//フォーマッタはどんな実装にしようか悩み中
+//日本語は４桁単位なのでフォーマッタを複数要るよな
 
-]
 let Langs = {
     'EN_US': { nameEN: 'English', name: 'English' },
     'JA_JP': { nameEN: 'Japanese', name: '日本語' }
-}
+} // lang/に配置されてる
 
-let GetNumScale = (x) => {
-    return Number.isFinite(x) ? ~~((toFixed(x).length + 1) / 3) : -1
-}
-
+//#region game usualy function
 let toFixed = (x) => { //正確な値を文字列で返す。('1e+5' > "100000") 引数はstringに解釈される
     return Number(x).toFixed()
 }
+
+//桁に対応する単位を求める関数 ","の数を返す
+// 1,000,000 = 2 (milion)
+// 1,000,000,000 = 3 (milion)
+//これによって単位を配列にしてアクセスできる
+//Infinity、NaN、数値型以外は-1
+let NumScale = (x) => {
+    return Number.isFinite(x) ? ~~((toFixed(x).length + 1) / 3) : -1
+}
+
+let BeautifyNum = (value, scale) => { //未実装
+    let v, s
+    return { "v": v, "s": s }
+    //数値、揃える桁を与えると、成形された数値と単位を返す
+    //1,234,000 2 = {"1.000","million"}
+}
+//#endregion
 
 let Game = {}
 Game.SaveLoc = "SaveData"
@@ -174,3 +176,4 @@ window.onload = () => {
     Game.Init()
     Game.LoadSave()
 };
+//#endregion
