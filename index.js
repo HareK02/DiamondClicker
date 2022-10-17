@@ -1,6 +1,10 @@
 //毎回桁数を導きだすのは如何に？(負荷的に)
 
 //#region regular functions
+let e = id => {
+    return document.getElementById(id);
+}
+
 let escape = (str) => {
     return str.replace(/[^a-zA-Z0-9@*_+\-./]/g, (m) => {
         const code = m.charCodeAt(0)
@@ -72,19 +76,22 @@ let toFixed = (x) => { //正確な値を文字列で返す。('1e+5' > "100000")
 }
 
 //桁に対応する単位を求める関数 ","の数を返す
-// 1,000,000 = 2 (milion)
-// 1,000,000,000 = 3 (milion)
+// 1,000,000 = 2 (milion) | 1,000,000,000 = 3 (milion)
 //これによって単位を配列にしてアクセスできる
 //Infinity、NaN、数値型以外は-1
 let NumScale = (x) => {
     return Number.isFinite(x) ? ~~((toFixed(x).length + 1) / 3) : -1
 }
 
-let BeautifyNum = (value, scale) => { //未実装
+//数値、揃える桁を与えると、成形された数値と単位を返す
+//1,234,000 2 = {"1.000","million"}
+let BeautifyNum = (value, scale) => {
     let v, s
+    
+    v = String(value / Math.pow(1000,scale));
+    s = numFormats.long[scale-1];
+    
     return { "v": v, "s": s }
-    //数値、揃える桁を与えると、成形された数値と単位を返す
-    //1,234,000 2 = {"1.000","million"}
 }
 //#endregion
 
@@ -99,58 +106,7 @@ Game.SaveIndex = {
 }
 Game.Launch = () => {
     Game.diamonds
-    Game.Init = {}
-    Game.WriteSave = () => {
-        let data = [];
-        let keys = Object.keys(Game.SaveIndex)
-        for (let n = 0; n < keys.length; n++) {
-            switch (keys[n]) {
-                case "basicInfo": {
-                    data[Game.SaveIndex.basicInfo] =
-                        (Game.VERSION) + '.' +
-                        (Game.language)
-                } break
-                case "prefs": {
-                    data[Game.SaveIndex.prefs] = (() => {
-                        let str = ''
-                        for (let i = 0; ; i++) {
-                            str += Game.prefs[Game.prefsItems[i]] + '.'
-                            if (!(i < Game.prefsItems.length - 1)) {
-                                return str.slice(0, -1)
-                            }
-                        }
-                    })()
-                } break
-                case "game": {
-                } break
-                case "stats": {
-                } break
-            }
-        }// 平文→base64→エスケープ ↓
-        localStorageSet(Game.SaveLoc, Utilities.escape(btoa(data.join('-'))))
-    }
-    Game.LoadSave = () => {
-        let data = atob(Utilities.unescape(localStorageGet(Game.SaveLoc))).split('-')
-        Object.keys(Game.SaveIndex).forEach(key => {
-            switch (key) {
-                case "basicInfo": {
-                    let spl = data[Game.SaveIndex.basicInfo].split('.')
-                    Game.VERSION = spl[0]
-                    Game.language = spl[1]
-                } break
-                case "prefs": {
-                    let spl = data[Game.SaveIndex.prefs].split('.')
-                    for (let i = 0; i < Game.prefsItems.length; i++) {
-                        Game.prefs[Game.prefsItems[i]] = spl[i]
-                    }
-                } break
-                case "game": {
-                } break
-                case "stats": {
-                } break
-            }
-        })
-    }
+    Game.Init = {}//初期化関数
 
     Game.Init = () => {
 
@@ -169,6 +125,59 @@ Game.Launch = () => {
             }
         }
         Game.DefaultPrefs()
+
+        
+        Game.WriteSave = () => {
+            let data = [];
+            let keys = Object.keys(Game.SaveIndex)
+            for (let n = 0; n < keys.length; n++) {
+                switch (keys[n]) {
+                    case "basicInfo": {
+                        data[Game.SaveIndex.basicInfo] =
+                            (Game.VERSION) + '.' +
+                            (Game.language)
+                    } break
+                    case "prefs": {
+                        data[Game.SaveIndex.prefs] = (() => {
+                            let str = ''
+                            for (let i = 0; ; i++) {
+                                str += Game.prefs[Game.prefsItems[i]] + '.'
+                                if (!(i < Game.prefsItems.length - 1)) {
+                                    return str.slice(0, -1)
+                                }
+                            }
+                        })()
+                    } break
+                    case "game": {
+                    } break
+                    case "stats": {
+                    } break
+                }
+            }// 平文→base64→エスケープ ↓
+            localStorageSet(Game.SaveLoc, Utilities.escape(btoa(data.join('-'))))
+        }
+        Game.LoadSave = () => {
+            let data = atob(Utilities.unescape(localStorageGet(Game.SaveLoc))).split('-')
+            Object.keys(Game.SaveIndex).forEach(key => {
+                switch (key) {
+                    case "basicInfo": {
+                        let spl = data[Game.SaveIndex.basicInfo].split('.')
+                        Game.VERSION = spl[0]
+                        Game.language = spl[1]
+                    } break
+                    case "prefs": {
+                        let spl = data[Game.SaveIndex.prefs].split('.')
+                        for (let i = 0; i < Game.prefsItems.length; i++) {
+                            Game.prefs[Game.prefsItems[i]] = spl[i]
+                        }
+                    } break
+                    case "game": {
+                    } break
+                    case "stats": {
+                    } break
+                }
+            })
+        }
     }
 }
 window.onload = () => {
