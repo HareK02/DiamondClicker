@@ -58,10 +58,10 @@ localStorageSet = function (key, str) {
 
 //#region game
 let numFormats = {
-    "long": [' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion', ' sextillion', ' septillion', ' octillion', ' nonillion', ' decillion', ' undecillion', ' duodecillion', ' tredecillion', ' quattuordecillion', ' quindecillion', ' sexdecillion', ' septendecillion', ' octodecillion', ' novemdecillion', ' vigintillion', ' unvigintillion', ' duovigintillion', ' trevigintillion', ' quattuorvigintillion', ' quinvigintillion', ' sexvigintillion', ' septenvigintillion', ' octovigintillion', ' novemvigintillion', ' trigintillion', ' untrigintillion', ' duotrigintillion', ' tretrigintillion', ' quattuortrigintillion', ' quintrigintillion', ' sextrigintillion', ' septentrigintillion', ' octotrigintillion', ' novemtrigintillion', ' quadragintillion', ' unquadragintillion', ' duoquadragintillion', ' trequadragintillion', ' quattuorquadragintillion', ' quinquadragintillion', ' sexquadragintillion', ' septenquadragintillion', ' octoquadragintillion', ' novemquadragintillion', ' quinquagintillion', ' unquinquagintillion', ' duoquinquagintillion', ' trequinquagintillion', ' quattuorquinquagintillion', ' quinquinquagintillion', ' sexquinquagintillion', ' septenquinquagintillion', ' octoquinquagintillion', ' novemquinquagintillion', ' sexagintillion', ' unsexagintillion', ' duosexagintillion', ' tresexagintillion', ' quattuorsexagintillion', ' quinsexagintillion', ' sexsexagintillion', ' septensexagintillion', ' octosexagintillion', ' novemsexagintillion', ' septuagintillion', ' unseptuagintillion', ' duoseptuagintillion', ' treseptuagintillion', ' quattuorseptuagintillion', ' quinseptuagintillion', ' sexseptuagintillion', ' septenseptuagintillion', ' octoseptuagintillion', ' novemseptuagintillion', ' octogintillion', ' unoctogintillion', ' duooctogintillion', ' treoctogintillion', ' quattuoroctogintillion', ' quinoctogintillion', ' sexoctogintillion', ' septenoctogintillion', ' octooctogintillion', ' novemoctogintillion', ' nonagintillion', ' unnonagintillion', ' duononagintillion', ' trenonagintillion', ' quattuornonagintillion', ' quinnonagintillion', ' sexnonagintillion', ' septennonagintillion', ' octononagintillion', ' novemnonagintillion'],
-    "short": ['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', ' UnD', ' DoD', ' TrD', ' QaD', ' QiD', ' SxD', ' SpD', ' OcD', ' NoD', ' V', ' UnV', ' DoV', ' TrV', ' QaV', ' QiV', ' SxV', ' SpV', ' OcV', ' NoV', ' T', ' UnT', ' DoT', ' TrT', ' QaT', ' QiT', ' SxT', ' SpT', ' OcT', ' NoT', ' Qa', ' UnQa', ' DoQa', ' TrQa', ' QaQa', ' QiQa', ' SxQa', ' SpQa', ' OcQa', ' NoQa', ' Qi', ' UnQi', ' DoQi', ' TrQi', ' QaQi', ' QiQi', ' SxQi', ' SpQi', ' OcQi', ' NoQi', ' Sx', ' UnSx', ' DoSx', ' TrSx', ' QaSx', ' QiSx', ' SxSx', ' SpSx', ' OcSx', ' NoSx', ' Sp', ' UnSp', ' DoSp', ' TrSp', ' QaSp', ' QiSp', ' SxSp', ' SpSp', ' OcSp', ' NoSp', ' O', ' UnO', ' DoO', ' TrO', ' QaO', ' QiO', ' SxO', ' SpO', ' OcO', ' NoO', ' N', ' UnN', ' DoN', ' TrN', ' QaN', ' QiN', ' SxN', ' SpN', ' OcN', ' NoN']
+    "long": [1000, [' thousand', ' million', ' billion', ' trillion', ' quadrillion', ' quintillion', ' sextillion', ' septillion', ' octillion', ' nonillion', ' decillion', ' undecillion', ' duodecillion', ' tredecillion', ' quattuordecillion', ' quindecillion', ' sexdecillion', ' septendecillion', ' octodecillion', ' novemdecillion', ' vigintillion', ' unvigintillion', ' duovigintillion', ' trevigintillion', ' quattuorvigintillion', ' quinvigintillion', ' sexvigintillion', ' septenvigintillion', ' octovigintillion', ' novemvigintillion', ' trigintillion', ' untrigintillion', ' duotrigintillion', ' tretrigintillion', ' quattuortrigintillion', ' quintrigintillion', ' sextrigintillion', ' septentrigintillion', ' octotrigintillion', ' novemtrigintillion', ' quadragintillion', ' unquadragintillion', ' duoquadragintillion', ' trequadragintillion', ' quattuorquadragintillion', ' quinquadragintillion', ' sexquadragintillion', ' septenquadragintillion', ' octoquadragintillion', ' novemquadragintillion', ' quinquagintillion', ' unquinquagintillion', ' duoquinquagintillion', ' trequinquagintillion', ' quattuorquinquagintillion', ' quinquinquagintillion', ' sexquinquagintillion', ' septenquinquagintillion', ' octoquinquagintillion', ' novemquinquagintillion', ' sexagintillion', ' unsexagintillion', ' duosexagintillion', ' tresexagintillion', ' quattuorsexagintillion', ' quinsexagintillion', ' sexsexagintillion', ' septensexagintillion', ' octosexagintillion', ' novemsexagintillion', ' septuagintillion', ' unseptuagintillion', ' duoseptuagintillion', ' treseptuagintillion', ' quattuorseptuagintillion', ' quinseptuagintillion', ' sexseptuagintillion', ' septenseptuagintillion', ' octoseptuagintillion', ' novemseptuagintillion', ' octogintillion', ' unoctogintillion', ' duooctogintillion', ' treoctogintillion', ' quattuoroctogintillion', ' quinoctogintillion', ' sexoctogintillion', ' septenoctogintillion', ' octooctogintillion', ' novemoctogintillion', ' nonagintillion', ' unnonagintillion', ' duononagintillion', ' trenonagintillion', ' quattuornonagintillion', ' quinnonagintillion', ' sexnonagintillion', ' septennonagintillion', ' octononagintillion', ' novemnonagintillion']],
+    "short": [1000, ['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', ' UnD', ' DoD', ' TrD', ' QaD', ' QiD', ' SxD', ' SpD', ' OcD', ' NoD', ' V', ' UnV', ' DoV', ' TrV', ' QaV', ' QiV', ' SxV', ' SpV', ' OcV', ' NoV', ' T', ' UnT', ' DoT', ' TrT', ' QaT', ' QiT', ' SxT', ' SpT', ' OcT', ' NoT', ' Qa', ' UnQa', ' DoQa', ' TrQa', ' QaQa', ' QiQa', ' SxQa', ' SpQa', ' OcQa', ' NoQa', ' Qi', ' UnQi', ' DoQi', ' TrQi', ' QaQi', ' QiQi', ' SxQi', ' SpQi', ' OcQi', ' NoQi', ' Sx', ' UnSx', ' DoSx', ' TrSx', ' QaSx', ' QiSx', ' SxSx', ' SpSx', ' OcSx', ' NoSx', ' Sp', ' UnSp', ' DoSp', ' TrSp', ' QaSp', ' QiSp', ' SxSp', ' SpSp', ' OcSp', ' NoSp', ' O', ' UnO', ' DoO', ' TrO', ' QaO', ' QiO', ' SxO', ' SpO', ' OcO', ' NoO', ' N', ' UnN', ' DoN', ' TrN', ' QaN', ' QiN', ' SxN', ' SpN', ' OcN', ' NoN']],
+    "JA_JP": [10000, ['万', '億', '兆', '京', '垓', '𥝱', '穣', '溝', '澗', '正', '載', '極', '恒河沙', '阿僧祇', '那由他', '不可思議', '無量大数']]
 }
-let numFormatters = [] 
 //フォーマッタはどんな実装にしようか悩み中
 //日本語は４桁単位なのでフォーマッタを複数要るよな
 
@@ -71,8 +71,11 @@ let Langs = {
 } // lang/に配置されてる
 
 //#region game usualy function
-let toFixed = (x) => { //正確な値を文字列で返す。('1e+5' > "100000") 引数はstringに解釈される
-    return Number(x).toFixed()
+
+//正確な値を文字列で返す。('1e+5' > "100000") 引数はstringに解釈される
+//第二引数は返す小数の桁数。 デフォルトで整数部のみになる
+let toFixed = (x, s = 0) => {
+    return Number.parseFloat(x).toFixed(s)
 }
 
 //桁に対応する単位を求める関数 ","の数を返す
@@ -85,13 +88,16 @@ let NumScale = (x) => {
 
 //数値、揃える桁を与えると、成形された数値と単位を返す
 //1,234,000 2 = {"1.000","million"}
-let BeautifyNum = (value, scale) => {
-    let v, s
-    
-    v = String(value / Math.pow(1000,scale));
-    s = numFormats.long[scale-1];
-    
-    return { "v": v, "s": s }
+let BeautifyNum = (value) => {
+    let base = 0
+    let scale = numFormats[Game.formatter][0]
+    if (!isFinite(value)) return 'Infinity';
+    while (Math.round(value) >= scale) {
+        value /= scale;
+        base++;
+    }
+    if (base >= numFormats[Game.formatter][1].length) return 'Infinity'
+    return { "v": (Math.round(value * scale) / scale), "s": (base == 0 ? '' : numFormats[Game.formatter][1][base - 1]) }
 }
 //#endregion
 
@@ -106,8 +112,12 @@ Game.SaveIndex = {
 }
 Game.Launch = () => {
     Game.diamonds
-    Game.Init = {}//初期化関数
 
+    //#region Click handling
+    Game.Click
+    //#endregion
+
+    Game.Init = {}//初期化関数
     Game.Init = () => {
 
         Game.prefs = []
@@ -123,10 +133,12 @@ Game.Launch = () => {
             for (let i = 0; i < Game.prefsItems.length; i++) {
                 Game.prefs[Game.prefsItems[i]] = Game.defaultPrefs[i]
             }
+            Game.language = "EN_US"
+            Game.formatter = "long"
         }
         Game.DefaultPrefs()
 
-        
+
         Game.WriteSave = () => {
             let data = [];
             let keys = Object.keys(Game.SaveIndex)
@@ -134,14 +146,15 @@ Game.Launch = () => {
                 switch (keys[n]) {
                     case "basicInfo": {
                         data[Game.SaveIndex.basicInfo] =
-                            (Game.VERSION) + '.' +
-                            (Game.language)
+                            (VERSION) + '-' +
+                            (Game.language) + '-' +
+                            (Game.formatter)
                     } break
                     case "prefs": {
                         data[Game.SaveIndex.prefs] = (() => {
                             let str = ''
                             for (let i = 0; ; i++) {
-                                str += Game.prefs[Game.prefsItems[i]] + '.'
+                                str += Game.prefs[Game.prefsItems[i]] + '-'
                                 if (!(i < Game.prefsItems.length - 1)) {
                                     return str.slice(0, -1)
                                 }
@@ -154,21 +167,22 @@ Game.Launch = () => {
                     } break
                 }
             }// 平文→base64→エスケープ ↓
-            localStorageSet(Game.SaveLoc, Utilities.escape(btoa(data.join('-'))))
+            localStorageSet(Game.SaveLoc, escape(btoa(data.join('|'))))
         }
         Game.LoadSave = () => {
-            let data = atob(Utilities.unescape(localStorageGet(Game.SaveLoc))).split('-')
+            let data = atob(unescape(localStorageGet(Game.SaveLoc))).split('|')
             Object.keys(Game.SaveIndex).forEach(key => {
                 switch (key) {
                     case "basicInfo": {
-                        let spl = data[Game.SaveIndex.basicInfo].split('.')
-                        Game.VERSION = spl[0]
-                        Game.language = spl[1]
+                        let spl = data[Game.SaveIndex.basicInfo].split('-')
+                        if (VERSION != spl[0]) { console.log("アップデートがありました" + VERSION + spl[0]) }
+                        Game.language = spl[1] ? spl[1] : "EN_US"
+                        Game.formatter = spl[2] ? spl[2] : "long"
                     } break
                     case "prefs": {
-                        let spl = data[Game.SaveIndex.prefs].split('.')
+                        let spl = data[Game.SaveIndex.prefs].split('-')
                         for (let i = 0; i < Game.prefsItems.length; i++) {
-                            Game.prefs[Game.prefsItems[i]] = spl[i]
+                            if (spl[i]) Game.prefs[Game.prefsItems[i]] = parseInt(spl[i])
                         }
                     } break
                     case "game": {
