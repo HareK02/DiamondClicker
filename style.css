@@ -1,236 +1,126 @@
 /*#region reset css */
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-  overflow: hidden;
-  box-sizing: border-box;
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    overflow: hidden;
+    box-sizing: border-box;
 }
-
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
 }
-
 body {
-  line-height: 1;
+    line-height: 1;
 }
-
-ol,
-ul {
-  list-style: none;
+ol, ul {
+    list-style: none;
 }
-
-blockquote,
-q {
-  quotes: none;
+blockquote, q {
+    quotes: none;
 }
-
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
+blockquote:before, blockquote:after, q:before, q:after {
+    content: "";
+    content: none;
 }
-
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
-
 /*#endregion*/
-
 /*#region app css */
 #game {
-  width: 100%;
-  height: 100vh;
+    width: 100%;
+    height: 100vh;
 }
-
 /*#region regular class */
 .container {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: column;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
 }
-
 .L2R {
-  flex-direction: row;
+    flex-direction: row;
 }
-
 .R2L {
-  flex-direction: row-reverse;
+    flex-direction: row-reverse;
 }
-
 .U2D {
-  flex-direction: column;
+    flex-direction: column;
 }
-
 .D2U {
-  flex-direction: column-reverse;
+    flex-direction: column-reverse;
 }
-
-.L2R>div,
-.R2L>div {
-  height: 100%;
+.L2R>div, .R2L>div {
+    height: 100%;
 }
-
-.U2D>div,
-.D2U>div {
-  width: 100%;
+.U2D>div, .D2U>div {
+    width: 100%;
 }
-
 .unhidden-x {
-  overflow-x: visible;
+    overflow-x: visible;
 }
-
 .unhidden-y {
-  overflow-y: visible;
+    overflow-y: visible;
 }
-
-.L2R.scrollable,
-.R2L.scrollable {
-  overflow: scroll hidden;
+.L2R.scrollable, .R2L.scrollable {
+    overflow: scroll hidden;
 }
-
-.U2D.scrollable,
-.D2U.scrollable {
-  overflow: hidden scroll;
+.U2D.scrollable, .D2U.scrollable {
+    overflow: hidden scroll;
 }
-
 /*#endregion*/
-
 #baseVContainer {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
-
 #ClickerScrn {
-  flex-grow: 3;
-  position: relative;
+    flex-grow: 3;
+    position: relative;
 }
-
 #Banner {
-  width: 100%;
-  top: 10%;
-  position: absolute;
-  height: 10%;
-  background-color: rgba(100, 100, 100, .5);
+    width: 100%;
+    top: 10%;
+    position: absolute;
+    height: 10%;
+    background-color: rgba(100, 100, 100, .5);
 }
-
+#DiamondButton {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    transition: 0.5s;
+    top: 48%;
+    left: 50%;
+    width: 256px;
+    height: 256px;
+    border-radius: 50%;
+    background-color: aqua;
+}
+#DiamondButton:hover {
+    width: 266px;
+    height: 266px;
+}
 #Contents {
-  flex-grow: 6;
-  position: relative;
+    flex-grow: 6;
+    position: relative;
 }
-
 #CenterArea {
-  flex-grow: 5;
-  position: relative;
+    flex-grow: 5;
+    position: relative;
 }
-
-#Products {
-  flex-grow: 4;
-  position: relative;
-}
-
 #Menu {
-  flex-grow: 1;
+    flex-grow: 1;
+    background-color: aquamarine;
 }
-
 #Panel {
-  height: 30vh;
+    height: 30vh;
+    background-color: thistle;
 }
-
+#Products {
+    flex-grow: 4;
+    position: relative;
+    background-color: lightcoral;
+}
 /*#endregion*/

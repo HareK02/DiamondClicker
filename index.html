@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>0ダイヤ - Diamond Clicker</title>
-    <meta name="description" content="">
-    <script>var VERSION = '0.0.1';</script>
-    <link href="style.css" rel="stylesheet">
-    <script src="index.js" async defer></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <div id="game">
-      <div id="baseVContainer" class="container L2R">
-        <div></div>
-        <div id="ClickerScrn">
-          <div id="Banner">
-            123.456 million diamonds
-          </div>
-        </div>
-        <div id="Contents" class="container L2R">
-          <div id="CenterArea" class="container U2D">
-            <div id="Menu" class="switchingArea">
-              <div id="Inventory"></div>
-              <div id="ProductsMenu"></div>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>0ダイヤ - Diamond Clicker</title>
+        <meta name="description" content="">
+        <script>var VERSION = '0.0.1';</script>
+        <link href="style.css" rel="stylesheet">
+        <script src="index.js" async defer></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="game">
+            <div id="baseVContainer" class="container L2R">
+                <div></div>
+                <div id="ClickerScrn">
+                    <div id="Banner"> 123.456 million diamonds </div>
+                    <button id="DiamondButton"></button>
+                    <div id="Notice"></div>
+                </div>
+                <div id="Contents" class="container L2R">
+                    <div id="CenterArea" class="container U2D">
+                        <div id="Menu" class="switchingArea">
+                            <div id="Inventory"></div>
+                            <div id="ProductsMenu"></div>
+                        </div>
+                        <div id="Panel">
+                        </div>
+                    </div>
+                    <div id="Products" class="container U2D scrollable" style="overflow-x:visible;">
+                        <div class="prod-item" id="">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="Panel"></div>
-          </div>
-          <div id="Products" class="container U2D scrollable" style="overflow-x:visible;">
-            <div class="prod-item" id="">
+            <div>
             </div>
-          </div>
         </div>
-      </div>
-      <div>
-      </div>
-    </div>
-  </body>
+    </body>
 </html>
