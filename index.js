@@ -2,7 +2,10 @@
 
 //#region regular functions
 let e = id => {
-    return document.getElementById(id);
+    return document.getElementById(id)
+}
+let addEvent = (elem, type, func) => {
+    elem.addEventListener(type, func, false)
 }
 
 let _escape = (str) => {
@@ -70,31 +73,15 @@ let Langs = {
 
 //#region game usualy function
 
-//正確な値を文字列で返す。('1e+5' > "100000") 引数はstringに解釈される
-//第二引数は返す小数の桁数。 デフォルトで整数部のみになる
-let toFixed = (x, s = 0) => {
-    return Number.parseFloat(x).toFixed(s)
-}
-
-//桁に対応する単位を求める関数 ","の数を返す
-// 1,000,000 = 2 (milion) | 1,000,000,000 = 3 (milion)
-//これによって単位を配列にしてアクセスできる
-//Infinity、NaN、数値型以外は-1
+//桁数とフォーマッタのIndexを返す
 let NumScale = (x) => {
-    return Number.isFinite(x) ? ~~((toFixed(x).length + 1) / 3) : -1
+    let value = x.toString().length
+    return {
+        "digit": value,
+        "scale": ~~((value + 1) / (numFormats[Game.formatter][0].toString().length - 1))
+    }
 }
 
-let BeautifyNum = (value) => {
-    let base = 0
-    let scale = numFormats[Game.formatter][0]
-    if (!isFinite(value)) return 'Infinity';
-    while (Math.round(value) >= scale) {
-        value /= scale;
-        base++;
-    }
-    if (base >= numFormats[Game.formatter][1].length) return 'Infinity'
-    return { "v": (Math.round(value * scale) / scale), "s": (base == 0 ? '' : numFormats[Game.formatter][1][base - 1]) }
-}
 //#endregion
 
 let Game = {}
@@ -104,22 +91,22 @@ Game.Launch = () => {
     Game.Init = {} //初期化関数
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
-        Game.diamond = new BigInt('0')
+        Game.diamond = BigInt('0')
 
         //#region Click handling
-        var ClickableDiamond = e('ClickableDiamond');
+        var ClickableDiamond = e('ClickableDiamond')
         Game.Click = () => {
 
         }
-        AddEvent(ClickableDiamond, 'click', Game.Click);
-        AddEvent(ClickableDiamond, 'mousedown', (e) => { });
-        AddEvent(ClickableDiamond, 'mouseup', (e) => { });
-        AddEvent(ClickableDiamond, 'mouseover', (e) => { });
-        AddEvent(ClickableDiamond, 'mouseout', (e) => { });
+        addEvent(ClickableDiamond, 'click', Game.Click)
+        addEvent(ClickableDiamond, 'mousedown', (e) => { })
+        addEvent(ClickableDiamond, 'mouseup', (e) => { })
+        addEvent(ClickableDiamond, 'mouseover', (e) => { })
+        addEvent(ClickableDiamond, 'mouseout', (e) => { })
         //#endregion
 
         //#region GUI
-        var Title = e('diamonds');
+        var Title = e('diamonds')
 
         //#endregion
 
@@ -152,7 +139,7 @@ Game.Launch = () => {
         Game.DefaultPrefs()
 
         Game.WriteSave = () => {
-            let data = [];
+            let data = []
             let keys = Object.keys(Game.SaveIndex)
             for (let n = 0; n < keys.length; n++) {
                 switch (keys[n]) {
@@ -209,7 +196,7 @@ Game.Launch = () => {
                     } break
                     case "products": {
 
-                    } breakF
+                    } break
                     case "stats": {
                     } break
                 }
@@ -217,9 +204,9 @@ Game.Launch = () => {
         }
 
         //#endregion
-    
-        Game.gameSpeedManager = new GameSpeedManager(30)
-        Game.Loop();
+
+        Game.frameManager = new GameSpeedManager(30)
+        Game.Loop()
     }
 
     //フレーム毎の処理
@@ -237,7 +224,7 @@ Game.Launch = () => {
         Game.Update()
         Game.Draw()
 
-        setTimeout(Game.Loop, gameSpeedManager.finish());
+        setTimeout(Game.Loop, Game.frameManager.finish())
     }
 }
 window.onload = () => {
@@ -245,5 +232,5 @@ window.onload = () => {
     Game.Init()
     Game.LoadSave()
 
-};
+}
 //#endregion

@@ -87,7 +87,7 @@ table {
     height: 10%;
     background-color: rgba(100, 100, 100, .5);
 }
-#DiamondButton {
+#ClickableDiamond {
     position: absolute;
     transform: translate(-50%, -50%);
     transition: 0.5s;
@@ -98,7 +98,7 @@ table {
     border-radius: 50%;
     background-color: aqua;
 }
-#DiamondButton:hover {
+#ClickableDiamond:hover {
     width: 266px;
     height: 266px;
 }
