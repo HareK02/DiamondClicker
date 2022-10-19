@@ -6,10 +6,10 @@ class GameSpeedManager {
 
     set_fps = function (fps) {
         this.goal_fps = fps;
-        this.total_first_time = 0;
-        this.total_count = 0;
         this.start_time = new Date().getTime();
         this.end_time = 0;
+        this.total_first_time = this.start_time;
+        this.total_count = 0;
         this.real_fps = 0;
     }
 
