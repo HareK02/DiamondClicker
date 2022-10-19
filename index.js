@@ -5,7 +5,7 @@ let e = id => {
     return document.getElementById(id);
 }
 
-let escape = (str) => {
+let _escape = (str) => {
     return str.replace(/[^a-zA-Z0-9@*_+\-./]/g, (m) => {
         const code = m.charCodeAt(0)
         if (code <= 0xff) {
@@ -15,7 +15,7 @@ let escape = (str) => {
         }
     })
 }
-let unescape = (str) => {
+let _unescape = (str) => {
     let d = (st) => {
         let i = 0
         for (let j = 0; j < st.length; j++) {
@@ -111,15 +111,18 @@ Game.SaveIndex = {
     "stats": 5       //実績
 }
 Game.Launch = () => {
-    Game.diamonds
+    Game.diamond = new BigInt('0')
 
     //#region Click handling
-    Game.Click
+    Game.Click = () => {
+
+    }
     //#endregion
 
-    Game.Init = {}//初期化関数
+    Game.Init = {} //初期化関数
     Game.Init = () => {
 
+        //#region Params&Prefs I/O
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
             "particles",  // particle effects | 2:with physics / 1:normal particle / 0:off
@@ -137,7 +140,6 @@ Game.Launch = () => {
             Game.formatter = "long"
         }
         Game.DefaultPrefs()
-
 
         Game.WriteSave = () => {
             let data = [];
@@ -162,15 +164,21 @@ Game.Launch = () => {
                         })()
                     } break
                     case "game": {
+                        data[Game.SaveIndex.game] = (() => {
+                            let str = Game.diamonds.toString() + '-'
+                        })()
+                    } break
+                    case "products": {
+
                     } break
                     case "stats": {
                     } break
                 }
             }// 平文→base64→エスケープ ↓
-            localStorageSet(Game.SaveLoc, escape(btoa(data.join('|'))))
+            localStorageSet(Game.SaveLoc, _escape(btoa(data.join('|'))))
         }
         Game.LoadSave = () => {
-            let data = atob(unescape(localStorageGet(Game.SaveLoc))).split('|')
+            let data = atob(_unescape(localStorageGet(Game.SaveLoc))).split('|')
             Object.keys(Game.SaveIndex).forEach(key => {
                 switch (key) {
                     case "basicInfo": {
@@ -186,12 +194,18 @@ Game.Launch = () => {
                         }
                     } break
                     case "game": {
+                        let spl = data[Game.SaveIndex.prefs].split('-')
+                        Game.diamonds = BigInt(spl[0])
                     } break
+                    case "products": {
+
+                    } breakF
                     case "stats": {
                     } break
                 }
             })
         }
+        //#endregion
     }
 }
 window.onload = () => {
@@ -200,37 +214,3 @@ window.onload = () => {
     Game.LoadSave()
 };
 //#endregion
-
-class GameSpeedManager{
-
-    constructor(fps){
-        this.set_fps(fps);
-    }
-
-    set_fps = function(fps){
-        this.goal_fps = fps;
-        this.total_first_time = 0;
-        this.total_count = 0;
-        this.start_time = new Date().getTime();
-        this.end_time = 0;
-        this.real_fps = 0;
-    }
-
-    finish = function(){
-        this.end_time = new Date().getTime();
-        this.total_count++;
-
-        if(this.total_count > this.goal_fps){
-            this.real_fps = 1000 * this.total_count / (this.end_time - this.total_first_time);
-            this.total_first_time = this.end_time;
-            this.total_count = 0;
-        }
-
-        let delta = this.end_time-this.start_time;
-        delta = Math.max(0,1000/this.goal_fps-delta);
-
-        this.start_time = this.end_time + delta;
-
-        return delta;
-    }
-}
