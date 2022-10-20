@@ -58,7 +58,6 @@ localStorageSet = function (key, str) {
     try { window.localStorage.setItem(key, str); } catch (exception) { }
 }
 //#endregion
-var Title = e('Banner')
 
 //#region game
 let numFormats = {
@@ -101,7 +100,7 @@ Game.Launch = () => {
         Game.diamonds = BigInt('0')
 
         //#region Click handling
-        var ClickableDiamond = e('ClickableDiamond')
+        Game.ClickableDiamond = e('ClickableDiamond')
         Game.Click = () => {
 
         }
@@ -113,6 +112,7 @@ Game.Launch = () => {
         //#endregion
 
         //#region GUI
+        Game.Title = e('Banner')
 
         //#endregion
 
@@ -225,8 +225,8 @@ Game.Launch = () => {
     Game.Draw = () => {
         //ダイヤ数の更新、エフェクトの処理
         let beautify = BeautifyNum(Game.diamonds)
-        let str = beautify.i + '.' + beautify.d + beautify.f + ' diamonds'
-        Title.textContents = str
+        let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' diamonds'
+        Game.Title.textContent = str
     }
 
     //メインループ
