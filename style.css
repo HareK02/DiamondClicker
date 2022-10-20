@@ -86,6 +86,7 @@ table {
     position: absolute;
     height: 10%;
     background-color: rgba(100, 100, 100, .5);
+    text-align: center;
 }
 #ClickableDiamond {
     position: absolute;

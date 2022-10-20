@@ -58,6 +58,7 @@ localStorageSet = function (key, str) {
     try { window.localStorage.setItem(key, str); } catch (exception) { }
 }
 //#endregion
+var Title = e('Banner')
 
 //#region game
 let numFormats = {
@@ -74,14 +75,20 @@ let Langs = {
 //#region game usualy function
 
 //桁数とフォーマッタのIndexを返す
-let NumScale = (x) => {
-    let value = x.toString().length
+let NumScale = (value) => {
+    let x = value.toString().length
     return {
-        "digit": value,
-        "scale": ~~((value + 1) / (numFormats[Game.formatter][0].toString().length - 1))
+        "digit": x,
+        "scale": ~~((x - 1) / (numFormats[Game.formatter][0].toString().length - 1))
     }
 }
 
+let BeautifyNum = (value, scale = -1) => {
+    if (scale == -1) scale = NumScale(value).scale
+    if (scale <= 1) return { 'i': value.toString(), 'd': '', 'f': '' }
+    let str = (value / (BigInt(numFormats[Game.formatter][0] ** (scale - 1)))).toString()
+    return { 'i': str.slice(0, -3), 'd': str.slice(-3), 'f': numFormats[Game.formatter][1][scale - 1] }
+}
 //#endregion
 
 let Game = {}
@@ -91,7 +98,7 @@ Game.Launch = () => {
     Game.Init = {} //初期化関数
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
-        Game.diamond = BigInt('0')
+        Game.diamonds = BigInt('0')
 
         //#region Click handling
         var ClickableDiamond = e('ClickableDiamond')
@@ -106,19 +113,11 @@ Game.Launch = () => {
         //#endregion
 
         //#region GUI
-        var Title = e('diamonds')
 
         //#endregion
 
-        //#region Game,prefs Data I/O
-        Game.SaveLoc = "SaveData"
-        Game.SaveIndex = {
-            "basicInfo": 1,  //バージョン、言語など
-            "prefs": 2,      //設定項目
-            "game": 3,       //ゲームのデータ
-            "products": 4,   //施設設備の情報
-            "stats": 5       //実績
-        }
+        //#region Data of Game,prefs & I/O
+
 
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
@@ -138,6 +137,14 @@ Game.Launch = () => {
         }
         Game.DefaultPrefs()
 
+        Game.SaveLoc = "SaveData"
+        Game.SaveIndex = {
+            "basicInfo": 1,  //バージョン、言語など
+            "prefs": 2,      //設定項目
+            "game": 3,       //ゲームのデータ
+            "products": 4,   //施設設備の情報
+            "stats": 5       //実績
+        }
         Game.WriteSave = () => {
             let data = []
             let keys = Object.keys(Game.SaveIndex)
@@ -217,6 +224,9 @@ Game.Launch = () => {
     //描画
     Game.Draw = () => {
         //ダイヤ数の更新、エフェクトの処理
+        let beautify = BeautifyNum(Game.diamonds)
+        let str = beautify.i + '.' + beautify.d + beautify.f + ' diamonds'
+        Title.textContents = str
     }
 
     //メインループ
