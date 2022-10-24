@@ -117,7 +117,7 @@ Game.Launch = () => {
         //#endregion
 
         //#region Data of Game,prefs & I/O
-
+        Game.Products = {}
 
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
@@ -128,14 +128,15 @@ Game.Launch = () => {
             "fancyvisual" // Visual with Code | 2:high / 1:mid / 0:low
         ]
         Game.defaultPrefs = [2, 75, 1, 2, 2] //項目のデフォルト値
-        Game.DefaultPrefs = () => { //その他初期値
+        /* LoadSaveに組み込む予定
+        Game.DefaultPrefs = () => {
             for (let i = 0; i < Game.prefsItems.length; i++) {
                 Game.prefs[Game.prefsItems[i]] = Game.defaultPrefs[i]
             }
+            //basicinfo 初期値
             Game.language = "EN_US"
             Game.formatter = "long"
-        }
-        Game.DefaultPrefs()
+        }*/
 
         Game.SaveLoc = "SaveData"
         Game.SaveIndex = {
@@ -181,25 +182,26 @@ Game.Launch = () => {
             }// 平文→base64→エスケープ ↓
             localStorageSet(Game.SaveLoc, _escape(btoa(data.join('|'))))
         }
-        Game.LoadSave = () => {
-            let data = atob(_unescape(localStorageGet(Game.SaveLoc))).split('|')
+        Game.LoadSave = (dat) => {
+            let data = dat ? atob(_unescape(dat)).split('|') : undefined
             Object.keys(Game.SaveIndex).forEach(key => {
                 switch (key) {
                     case "basicInfo": {
-                        let spl = data[Game.SaveIndex.basicInfo].split('-')
-                        if (VERSION != spl[0]) { console.log("アップデートがありました" + VERSION + spl[0]) }
+                        let spl = data ? data[Game.SaveIndex.basicInfo].split('-') : []
+                        if (spl[0]== undefined) { console.log("初回起動") }
+                        else if (VERSION != spl[0]) { console.log("アップデートがありました" + VERSION + spl[0]) }
                         Game.language = spl[1] ? spl[1] : "EN_US"
                         Game.formatter = spl[2] ? spl[2] : "long"
                     } break
                     case "prefs": {
-                        let spl = data[Game.SaveIndex.prefs].split('-')
+                        let spl = data ? data[Game.SaveIndex.prefs].split('-') : []
                         for (let i = 0; i < Game.prefsItems.length; i++) {
-                            if (spl[i]) Game.prefs[Game.prefsItems[i]] = parseInt(spl[i])
+                            Game.prefs[Game.prefsItems[i]] = spl[i] ? parseInt(spl[i]) : Game.defaultPrefs[i]
                         }
                     } break
                     case "game": {
-                        let spl = data[Game.SaveIndex.prefs].split('-')
-                        Game.diamonds = BigInt(spl[0])
+                        let spl = data ? data[Game.SaveIndex.prefs].split('-') : []
+                        Game.diamonds = BigInt(spl[0] ? spl[0] : 0)
                     } break
                     case "products": {
 
@@ -208,12 +210,12 @@ Game.Launch = () => {
                     } break
                 }
             })
+            data && WriteSave()
         }
 
         //#endregion
 
         Game.frameManager = new GameSpeedManager(30)
-        Game.Loop()
     }
 
     //フレーム毎の処理
@@ -240,7 +242,8 @@ Game.Launch = () => {
 window.onload = () => {
     Game.Launch()
     Game.Init()
-    Game.LoadSave()
+    Game.LoadSave(localStorageGet(Game.SaveLoc))
+    Game.Loop()
 
 }
 //#endregion

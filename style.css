@@ -80,6 +80,11 @@ table {
     flex-grow: 3;
     position: relative;
 }
+#MainCanvas{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
 #Banner {
     width: 100%;
     top: 10%;
