@@ -93,7 +93,6 @@ let BeautifyNum = (value, scale = -1) => {
 let Game = {}
 Game.Launch = () => {
 
-
     Game.Init = {} //初期化関数
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
@@ -115,6 +114,7 @@ Game.Launch = () => {
         Game.Title = e('Banner')
 
         //#endregion
+
 
         //#region Data of Game,prefs & I/O
         Game.Products = {}

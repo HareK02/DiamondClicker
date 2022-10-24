@@ -6,7 +6,7 @@ class GameSpeedManager {
 
     set_fps = function (fps) {
         this.goal_fps = fps;
-        this.start_time = new Date().getTime();
+        this.start_time = Date.now();
         this.end_time = 0;
         this.total_first_time = this.start_time;
         this.total_count = 0;
@@ -14,7 +14,7 @@ class GameSpeedManager {
     }
 
     finish = function () {
-        this.end_time = new Date().getTime();
+        this.end_time = Date.now();
         this.total_count++;
 
         if (this.total_count > this.goal_fps) {
