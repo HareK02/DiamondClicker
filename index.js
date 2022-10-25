@@ -98,11 +98,12 @@ Game.Launch = () => {
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
         Game.diamonds = BigInt('0')
+        Game.DpS = BigInt('0')
 
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
         Game.Click = () => {
-
+            console.log("click");
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
@@ -117,7 +118,31 @@ Game.Launch = () => {
         //#endregion
 
         //#region Data of Game,prefs & I/O
-        Game.Products = {}
+        Game.products = {
+            "test1": {
+                "enabled": true, //表示されるか否か
+                "level": 1, //レベル0は買われてない状態
+                "data": {
+                    //レベル以外に保持するパラメーターはここに
+                },
+                "GetDpS": function () {
+                    //keyごとに処理するのでkeyの削除/追加可能
+                    //ここで特殊効果も乗せたりする
+                    return {
+                        "num": this.level,
+                        "per": this.level * 0.5,
+                        "clicknum": 0, //物理クリックに加算する実数(仮案)
+                        "clickper": 0 //物理クリックにの倍率(仮案)
+                    }
+                },
+                "initCost": 100, //初期費用
+                "GetCost": function (level = this.level) {
+                    //与えられたレベルから次のレベルに行くのにかかるコスト
+                    //まとめ買いはこれが何回も呼ばれる
+                    return level ^ 1.1
+                }
+            }
+        }
 
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
@@ -149,8 +174,8 @@ Game.Launch = () => {
         Game.WriteSave = () => {
             let data = []
             let keys = Object.keys(Game.SaveIndex)
-            for (let n = 0; n < keys.length; n++) {
-                switch (keys[n]) {
+            for (key of keys.length) {
+                switch (key) {
                     case "basicInfo": {
                         data[Game.SaveIndex.basicInfo] =
                             (VERSION) + '-' +
@@ -184,11 +209,11 @@ Game.Launch = () => {
         }
         Game.LoadSave = (dat) => {
             let data = dat ? atob(_unescape(dat)).split('|') : undefined
-            Object.keys(Game.SaveIndex).forEach(key => {
+            for (key of Object.keys(Game.SaveIndex)) {
                 switch (key) {
                     case "basicInfo": {
                         let spl = data ? data[Game.SaveIndex.basicInfo].split('-') : []
-                        if (spl[0]== undefined) { console.log("初回起動") }
+                        if (spl[0] == undefined) { console.log("初回起動") }
                         else if (VERSION != spl[0]) { console.log("アップデートがありました" + VERSION + spl[0]) }
                         Game.language = spl[1] ? spl[1] : "EN_US"
                         Game.formatter = spl[2] ? spl[2] : "long"
@@ -209,23 +234,31 @@ Game.Launch = () => {
                     case "stats": {
                     } break
                 }
-            })
+            }
             data && WriteSave()
         }
-
         //#endregion
 
-        Game.frameManager = new GameSpeedManager(30)
+        Game.tps = 30
+        Game.frameManager = new GameSpeedManager(Game.tps)
     }
 
     //フレーム毎の処理
     Game.Update = () => {
         //dpsの加算、エフェクト効果の経過、
+        let productsDpS = 0
+        for (key of Object.keys(Game.products)) {
+            productsDpS += Game.products[key].GetDpS()
+        }
+        Game.DpS = (productsDpS) * 1000
+        Game.DpTDec = Game.DpS % (1000/Game.tps)
+        Game.decDiamonds += Game.DpTDec
+        if (Game.decDiamonds >= 1000) {}
     }
 
     //描画
     Game.Draw = () => {
-        //ダイヤ数の更新、エフェクトの処理
+        //ダイヤ数の表示、エフェクトの処理
         let beautify = BeautifyNum(Game.diamonds)
         let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' diamonds'
         Game.Title.textContent = str
@@ -234,8 +267,6 @@ Game.Launch = () => {
     //メインループ
     Game.Loop = () => {
         Game.Update()
-        Game.Draw()
-
         setTimeout(Game.Loop, Game.frameManager.finish())
     }
 }
