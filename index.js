@@ -93,12 +93,10 @@ let BeautifyNum = (value, scale = -1) => {
 let Game = {}
 Game.Launch = () => {
 
-
     Game.Init = {} //初期化関数
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
         Game.diamonds = BigInt('0')
-        Game.DpS = BigInt('0')
 
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
@@ -113,7 +111,7 @@ Game.Launch = () => {
         //#endregion
 
         //#region GUI
-        
+
         //要素の取得とクリックイベント
         //施設の売買、インベントリ操作諸々
         Game.Title = e('Banner')
@@ -122,11 +120,17 @@ Game.Launch = () => {
 
         Game.CalcDpS = () => { //DpSの計算 変更のあったタイミングで実行する
             let productsDpS = 0
+            let productsDpSPer = 100
+            let Bigtps = BigInt(Game.tps)
             for (key of Object.keys(Game.products)) {
-                productsDpS += Game.products[key].GetDpS()
+                let d = Game.products[key].GetDpS()
+                productsDpS += d.num
+                productsDpSPer += d.per
             }
-            Game.DpS = (productsDpS) * 1000
-
+            Game.DpS = BigInt(~~(productsDpS * (productsDpSPer / 100) * 1000))
+            let DpSDec = Number(Game.DpS % (Bigtps * 1000n))
+            Game.DpTDec = DpSDec / Game.tps
+            Game.DpT = (Game.DpS - BigInt(DpSDec)) / Bigtps / 1000n
         }
 
         //#region Data of Game,prefs & I/O
@@ -177,7 +181,7 @@ Game.Launch = () => {
         Game.WriteSave = () => {
             let data = []
             let keys = Object.keys(Game.SaveIndex)
-            for (key of keys.length) {
+            for (key of keys) {
                 switch (key) {
                     case "basicInfo": {
                         data[Game.SaveIndex.basicInfo] =
@@ -238,20 +242,27 @@ Game.Launch = () => {
                     } break
                 }
             }
-            data && WriteSave()
+            data && Game.WriteSave()
         }
         //#endregion
-
         Game.tps = 30
         Game.frameManager = new GameSpeedManager(Game.tps)
+
+        Game.decDiamonds = 0
+        Game.CalcDpS()
     }
 
     //フレーム毎の処理
     Game.Update = () => {
         //dpsの加算、エフェクト効果の経過、
-        Game.DpTDec = Game.DpS % (1000 / Game.tps)
-        Game.decDiamonds += Game.DpTDec
-        if (Game.decDiamonds >= 1000) { }
+        Game.diamonds += Game.DpT
+
+        Game.decDiamonds += Game.DpTDec //小数部は別で計算
+        if (Game.decDiamonds >= 1000) {
+            Game.decDiamonds -= 1000
+            Game.diamonds += 1n
+        }
+        Game.Draw() //一時的にここに
     }
 
     //描画
