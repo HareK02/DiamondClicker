@@ -101,7 +101,7 @@ Game.Launch = () => {
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
         Game.Click = () => {
-
+            console.log("click");
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
@@ -111,13 +111,54 @@ Game.Launch = () => {
         //#endregion
 
         //#region GUI
+
+        //要素の取得とクリックイベント
+        //施設の売買、インベントリ操作諸々
         Game.Title = e('Banner')
 
         //#endregion
 
+        Game.CalcDpS = () => { //DpSの計算 変更のあったタイミングで実行する
+            let productsDpS = 0
+            let productsDpSPer = 100
+            let Bigtps = BigInt(Game.tps)
+            for (key of Object.keys(Game.products)) {
+                let d = Game.products[key].GetDpS()
+                productsDpS += d.num
+                productsDpSPer += d.per
+            }
+            Game.DpS = BigInt(~~(productsDpS * (productsDpSPer / 100) * 1000))
+            let DpSDec = Number(Game.DpS % (Bigtps * 1000n))
+            Game.DpTDec = DpSDec / Game.tps
+            Game.DpT = (Game.DpS - BigInt(DpSDec)) / Bigtps / 1000n
+        }
 
         //#region Data of Game,prefs & I/O
-        Game.Products = {}
+        Game.products = {
+            "test1": {
+                "enabled": true, //表示されるか否か
+                "level": 1, //レベル0は買われてない状態
+                "data": {
+                    //レベル以外に保持するパラメーターはここに
+                },
+                "GetDpS": function () {
+                    //keyごとに処理するのでkeyの削除/追加可能
+                    //ここで特殊効果も乗せたりする
+                    return {
+                        "num": this.level,
+                        "per": this.level * 0.5,
+                        "clicknum": 0, //物理クリックに加算する実数(仮案)
+                        "clickper": 0 //物理クリックにの倍率(仮案)
+                    }
+                },
+                "initCost": 100, //初期費用
+                "GetCost": function (level = this.level) {
+                    //与えられたレベルから次のレベルに行くのにかかるコスト
+                    //まとめ買いはこれが何回も呼ばれる
+                    return level ^ 1.1
+                }
+            }
+        }
 
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
@@ -128,15 +169,6 @@ Game.Launch = () => {
             "fancyvisual" // Visual with Code | 2:high / 1:mid / 0:low
         ]
         Game.defaultPrefs = [2, 75, 1, 2, 2] //項目のデフォルト値
-        /* LoadSaveに組み込む予定
-        Game.DefaultPrefs = () => {
-            for (let i = 0; i < Game.prefsItems.length; i++) {
-                Game.prefs[Game.prefsItems[i]] = Game.defaultPrefs[i]
-            }
-            //basicinfo 初期値
-            Game.language = "EN_US"
-            Game.formatter = "long"
-        }*/
 
         Game.SaveLoc = "SaveData"
         Game.SaveIndex = {
@@ -149,8 +181,8 @@ Game.Launch = () => {
         Game.WriteSave = () => {
             let data = []
             let keys = Object.keys(Game.SaveIndex)
-            for (let n = 0; n < keys.length; n++) {
-                switch (keys[n]) {
+            for (key of keys) {
+                switch (key) {
                     case "basicInfo": {
                         data[Game.SaveIndex.basicInfo] =
                             (VERSION) + '-' +
@@ -184,11 +216,11 @@ Game.Launch = () => {
         }
         Game.LoadSave = (dat) => {
             let data = dat ? atob(_unescape(dat)).split('|') : undefined
-            Object.keys(Game.SaveIndex).forEach(key => {
+            for (key of Object.keys(Game.SaveIndex)) {
                 switch (key) {
                     case "basicInfo": {
                         let spl = data ? data[Game.SaveIndex.basicInfo].split('-') : []
-                        if (spl[0]== undefined) { console.log("初回起動") }
+                        if (spl[0] == undefined) { console.log("初回起動") }
                         else if (VERSION != spl[0]) { console.log("アップデートがありました" + VERSION + spl[0]) }
                         Game.language = spl[1] ? spl[1] : "EN_US"
                         Game.formatter = spl[2] ? spl[2] : "long"
@@ -209,23 +241,33 @@ Game.Launch = () => {
                     case "stats": {
                     } break
                 }
-            })
-            data && WriteSave()
+            }
+            data && Game.WriteSave()
         }
-
         //#endregion
+        Game.tps = 30
+        Game.frameManager = new GameSpeedManager(Game.tps)
 
-        Game.frameManager = new GameSpeedManager(30)
+        Game.decDiamonds = 0
+        Game.CalcDpS()
     }
 
     //フレーム毎の処理
     Game.Update = () => {
         //dpsの加算、エフェクト効果の経過、
+        Game.diamonds += Game.DpT
+
+        Game.decDiamonds += Game.DpTDec //小数部は別で計算
+        if (Game.decDiamonds >= 1000) {
+            Game.decDiamonds -= 1000
+            Game.diamonds += 1n
+        }
+        Game.Draw() //一時的にここに
     }
 
     //描画
     Game.Draw = () => {
-        //ダイヤ数の更新、エフェクトの処理
+        //ダイヤ数の表示、エフェクトの処理
         let beautify = BeautifyNum(Game.diamonds)
         let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' diamonds'
         Game.Title.textContent = str
@@ -234,16 +276,14 @@ Game.Launch = () => {
     //メインループ
     Game.Loop = () => {
         Game.Update()
-        Game.Draw()
-
         setTimeout(Game.Loop, Game.frameManager.finish())
     }
 }
+
 window.onload = () => {
     Game.Launch()
     Game.Init()
     Game.LoadSave(localStorageGet(Game.SaveLoc))
     Game.Loop()
-
 }
 //#endregion
