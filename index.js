@@ -113,9 +113,21 @@ Game.Launch = () => {
         //#endregion
 
         //#region GUI
+        
+        //要素の取得とクリックイベント
+        //施設の売買、インベントリ操作諸々
         Game.Title = e('Banner')
 
         //#endregion
+
+        Game.CalcDpS = () => { //DpSの計算 変更のあったタイミングで実行する
+            let productsDpS = 0
+            for (key of Object.keys(Game.products)) {
+                productsDpS += Game.products[key].GetDpS()
+            }
+            Game.DpS = (productsDpS) * 1000
+
+        }
 
         //#region Data of Game,prefs & I/O
         Game.products = {
@@ -153,15 +165,6 @@ Game.Launch = () => {
             "fancyvisual" // Visual with Code | 2:high / 1:mid / 0:low
         ]
         Game.defaultPrefs = [2, 75, 1, 2, 2] //項目のデフォルト値
-        /* LoadSaveに組み込む予定
-        Game.DefaultPrefs = () => {
-            for (let i = 0; i < Game.prefsItems.length; i++) {
-                Game.prefs[Game.prefsItems[i]] = Game.defaultPrefs[i]
-            }
-            //basicinfo 初期値
-            Game.language = "EN_US"
-            Game.formatter = "long"
-        }*/
 
         Game.SaveLoc = "SaveData"
         Game.SaveIndex = {
@@ -246,14 +249,9 @@ Game.Launch = () => {
     //フレーム毎の処理
     Game.Update = () => {
         //dpsの加算、エフェクト効果の経過、
-        let productsDpS = 0
-        for (key of Object.keys(Game.products)) {
-            productsDpS += Game.products[key].GetDpS()
-        }
-        Game.DpS = (productsDpS) * 1000
-        Game.DpTDec = Game.DpS % (1000/Game.tps)
+        Game.DpTDec = Game.DpS % (1000 / Game.tps)
         Game.decDiamonds += Game.DpTDec
-        if (Game.decDiamonds >= 1000) {}
+        if (Game.decDiamonds >= 1000) { }
     }
 
     //描画
@@ -270,11 +268,11 @@ Game.Launch = () => {
         setTimeout(Game.Loop, Game.frameManager.finish())
     }
 }
+
 window.onload = () => {
     Game.Launch()
     Game.Init()
     Game.LoadSave(localStorageGet(Game.SaveLoc))
     Game.Loop()
-
 }
 //#endregion
