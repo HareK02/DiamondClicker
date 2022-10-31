@@ -137,6 +137,10 @@ table {
     flex-grow: 4;
     position: relative;
     background-color: lightcoral;
+    overflow-x: visible;
+}
+#Products:hover{
+    width: var(100%+20px);
 }
 .prod-item{
     width: 100px;
