@@ -101,7 +101,7 @@ Game.Launch = () => {
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
         Game.Click = () => {
-            console.log("click");
+            console.log("click")
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
@@ -246,10 +246,18 @@ Game.Launch = () => {
         }
         //#endregion
         Game.tps = 30
-        Game.frameManager = new GameSpeedManager(Game.tps)
+        Game.LoopManager = new GameLoopManager(() => {
+            Game.LoopManager.done()
+        }, Game.tps)
 
         Game.decDiamonds = 0
+    }
+
+    Game.Run = () => {
+        Game.LoadSave(localStorageGet(Game.SaveLoc))
+
         Game.CalcDpS()
+        Game.LoopManager.start()
     }
 
     //フレーム毎の処理
@@ -276,14 +284,13 @@ Game.Launch = () => {
     //メインループ
     Game.Loop = () => {
         Game.Update()
-        setTimeout(Game.Loop, Game.frameManager.finish())
+        Game.LoopManager.done()
     }
 }
 
 window.onload = () => {
     Game.Launch()
     Game.Init()
-    Game.LoadSave(localStorageGet(Game.SaveLoc))
-    Game.Loop()
+    Game.Run()
 }
 //#endregion
