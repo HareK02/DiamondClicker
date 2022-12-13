@@ -100,8 +100,13 @@ Game.Launch = () => {
 
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
+        Game.ClickSounds = []
+        let sounds = e('ClickSounds').children
+        for (let i = 0; i < sounds.length; i++) {
+            Game.ClickSounds[i] = sounds[i]
+        }
         Game.Click = () => {
-            console.log("click")
+            Game.ClickSounds[Math.floor(Math.random() * (Game.ClickSounds.length + 1))].play()
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
