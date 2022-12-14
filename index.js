@@ -114,7 +114,7 @@ Game.Launch = () => {
 
         //要素の取得とクリックイベント
         //施設の売買、インベントリ操作諸々
-        Game.Title = e('Banner')
+        Game.TitleText = e('BannerText')
 
         //#endregion
 
@@ -246,9 +246,16 @@ Game.Launch = () => {
         }
         //#endregion
         Game.tps = 30
-        Game.LoopManager = new GameLoopManager(() => {
-            Game.LoopManager.done()
+        Game.tickManager = new GameLoopManager(() => {
+            Game.Update()
+            Game.tickManager.done()
         }, Game.tps)
+
+        Game.fps = 60
+        Game.frameManager = new GameLoopManager(() => {
+            Game.Draw()
+            Game.frameManager.done()
+        }, Game.fps)
 
         Game.decDiamonds = 0
     }
@@ -257,7 +264,8 @@ Game.Launch = () => {
         Game.LoadSave(localStorageGet(Game.SaveLoc))
 
         Game.CalcDpS()
-        Game.LoopManager.start()
+        Game.tickManager.start()
+        Game.frameManager.start()
     }
 
     //フレーム毎の処理
@@ -277,8 +285,8 @@ Game.Launch = () => {
     Game.Draw = () => {
         //ダイヤ数の表示、エフェクトの処理
         let beautify = BeautifyNum(Game.diamonds)
-        let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' diamonds'
-        Game.Title.textContent = str
+        let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' million 　diamonds　'
+        Game.TitleText.textContent = str
     }
 
     //メインループ
