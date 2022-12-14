@@ -33,16 +33,17 @@ class GameSpeedManager {
 }
 
 class GameLoopManager {
-    constructor(func, cps) {
+    constructor(func, cps, debug = false) {
         this.func = func
         this.cps = cps
         this.mpc = 1000 / this.cps
+        this.debug = debug
 
         this.total_count = 0
         this.total_time = 0
     }
     start() {
-        this.leastDelta = -this.mpc
+        this.leastDelta = 0
         this.start_time = Date.now()
         this.leastTime = Date.now()
         this.done()//ここでdoneではなくfuncをtimeout付けて実行がいい(その前にtotal関連の処理も必要)
@@ -51,18 +52,18 @@ class GameLoopManager {
     done() {
         let now = Date.now()
         let deltaTime = now - this.leastTime
-        let delta = this.mpc + this.leastDelta - deltaTime
-        console.log(deltaTime, "(", Math.max(0, this.mpc + delta), ")", this.total_time / this.total_count)
-        setTimeout(this.func, Math.max(0, this.mpc + delta))
-        this.leastDelta = delta
+        let delta = this.leastDelta - deltaTime
+        this.leastDelta = Math.max(0, this.mpc + delta)
+        if (this.debug) console.log(deltaTime, "(", this.leastDelta, ")", this.total_time / this.total_count)
+        setTimeout(this.func, this.leastDelta)
         this.leastTime = now
 
         this.total_count++
         this.total_time += deltaTime
     }
 
-    refresh_total(){
-        this.total_count = 0
-        this.total_time = 0
+    refresh_total() {
+        this.total_count = 1
+        this.total_time = this.leastDelta
     }
 }
