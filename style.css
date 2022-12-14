@@ -3,7 +3,6 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 16px;
     font: inherit;
     vertical-align: baseline;
     box-sizing: border-box;
@@ -28,8 +27,15 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
-
 /*#endregion*/
+@font-face {
+    font-family: 'AmaticSC-Bold';
+    src: url(/fonts/AmaticSC-Bold.ttf);
+}
+html {
+    font-size: 1.95vh;
+    font-family: "AmaticSC-Bold";
+}
 /*#region app css */
 #game {
     width: 100%;
@@ -66,20 +72,21 @@ table {
     height: 10%;
     top: 10%;
     background-color: rgba(100, 100, 100, .5);
-    backdrop-filter: blur(2);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 #BannerText {
+    width: 34%;
     text-align: center;
-    font-size: 2rem;
+    font-size: 2.3rem;
 }
 #ClickableDiamond {
     top: 48%;
     left: 50%;
-    width: 256px;
-    height: 256px;
+    width: 18vw;
+    height: 18vw;
     position: absolute;
     transform: translate(-50%, -50%);
     transition: 0.5s;
@@ -87,8 +94,8 @@ table {
     background-color: lightseagreen;
 }
 #ClickableDiamond:hover {
-    width: 266px;
-    height: 266px;
+    width: 20vw;
+    height: 20vw;
 }
 #CenterArea {
     top: 0;
@@ -143,6 +150,16 @@ table {
 }
 .prod-cover:hover {
     left: -10px;
+}
+
+.prod-cover div{
+    
+    text-align: end;
+    display: flex;
+    line-height: 1.6rem;
+    bottom: 0;
+    position: absolute;
+    font-size: 1rem;
 }
 /*#endregion*/
 
