@@ -1,165 +1,165 @@
 /*#region reset css */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font: inherit;
-    vertical-align: baseline;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+	box-sizing: border-box;
 }
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-    display: block;
+	display: block;
 }
 body {
-    line-height: 1;
+	line-height: 1;
 }
 ol, ul {
-    list-style: none;
+	list-style: none;
 }
 blockquote, q {
-    quotes: none;
+	quotes: none;
 }
 blockquote:before, blockquote:after, q:before, q:after {
-    content: "";
-    content: none;
+	content: "";
+	content: none;
 }
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 /*#endregion*/
 @font-face {
-    font-family: 'AmaticSC-Bold';
-    src: url(/fonts/AmaticSC-Bold.ttf);
+	font-family: 'AmaticSC-Bold';
+	src: url(/fonts/AmaticSC-Bold.ttf);
 }
 html {
-    font-size: 1.95vh;
-    font-family: "AmaticSC-Bold";
+	font-size: 1.95vh;
+	font-family: "AmaticSC-Bold";
 }
 /*#region app css */
 #game {
-    width: 100%;
-    height: 100vh;
+	width: 100%;
+	height: 100vh;
 }
 /*#region regular class */
 .unhidden-x {
-    overflow-x: visible;
+	overflow-x: visible;
 }
 .unhidden-y {
-    overflow-y: visible;
+	overflow-y: visible;
 }
 /*#endregion*/
 #baseVContainer {
-    height: 100%;
-    width: 100%;
+	height: 100%;
+	width: 100%;
 }
 #ClickerScrn {
-    top: 0;
-    left: 0;
-    width: 35%;
-    height: 100%;
-    position: absolute;
-    background: linear-gradient(0.5turn, #dff17c, #6cffeb);
+	top: 0;
+	left: 0;
+	width: 35%;
+	height: 100%;
+	position: absolute;
+	background: linear-gradient(0.5turn, #dff17c, #6cffeb);
 }
 #MainCanvas {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 #Banner {
-    position: absolute;
-    width: 100%;
-    height: 10%;
-    top: 10%;
-    background-color: rgba(100, 100, 100, .5);
-    backdrop-filter: blur(2px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	position: absolute;
+	width: 100%;
+	height: 10%;
+	top: 10%;
+	background-color: rgba(100, 100, 100, .5);
+	backdrop-filter: blur(2px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 #BannerText {
-    width: 34%;
-    text-align: center;
-    font-size: 2.3rem;
+	width: 34%;
+	text-align: center;
+	font-size: 2.3rem;
 }
 #ClickableDiamond {
-    top: 48%;
-    left: 50%;
-    width: 18vw;
-    height: 18vw;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    transition: 0.5s;
-    border-radius: 50%;
-    background-color: lightseagreen;
+	top: 48%;
+	left: 50%;
+	width: 18vw;
+	height: 18vw;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	transition: 0.5s;
+	border-radius: 50%;
+	background-color: lightseagreen;
 }
 #ClickableDiamond:hover {
-    width: 20vw;
-    height: 20vw;
+	width: 20vw;
+	height: 20vw;
 }
 #CenterArea {
-    top: 0;
-    left: 35%;
-    width: 35%;
-    height: 100%;
-    position: relative;
+	top: 0;
+	left: 35%;
+	width: 35%;
+	height: 100%;
+	position: relative;
 }
 #Menu {
-    top: 0;
-    left: 35%;
-    width: 35%;
-    height: 60%;
-    position: absolute;
-    background-color: khaki;
-    border: solid 2px red;
+	top: 0;
+	left: 35%;
+	width: 35%;
+	height: 60%;
+	position: absolute;
+	background-color: khaki;
+	border: solid 2px red;
 }
 #Panel {
-    top: 60%;
-    left: 35%;
-    width: 35%;
-    height: 40%;
-    position: absolute;
-    background-color: thistle;
-    border: solid 2px peru;
+	top: 60%;
+	left: 35%;
+	width: 35%;
+	height: 40%;
+	position: absolute;
+	background-color: thistle;
+	border: solid 2px peru;
 }
 #Products {
-    top: 0;
-    right: 0;
-    width: 30%;
-    height: 100%;
-    position: absolute;
-    background-color: burlywood;
-    z-index: 3;
+	top: 0;
+	right: 0;
+	width: 30%;
+	height: 100%;
+	position: absolute;
+	background-color: burlywood;
+	z-index: 3;
 }
 .prod-item {
-    height: 10%;
-    width: 100%;
-    position: relative;
+	height: 10%;
+	width: 100%;
+	position: relative;
 }
 .prod-cover {
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: auto;
-    height: auto;
-    position: absolute;
-    background: linear-gradient(0.5turn, #a480ff, #74ffec);
-    border: solid 2px gray;
-    transition: 0.1s;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	width: auto;
+	height: auto;
+	position: absolute;
+	background: linear-gradient(0.5turn, #a480ff, #74ffec);
+	border: solid 2px gray;
+	transition: 0.1s;
 }
 .prod-cover:hover {
-    left: -10px;
+	left: -10px;
 }
 
-.prod-cover div{
-    
-    text-align: end;
-    display: flex;
-    line-height: 1.6rem;
-    bottom: 0;
-    position: absolute;
-    font-size: 1rem;
+.prod-cover div {
+
+	text-align: end;
+	display: flex;
+	line-height: 1.6rem;
+	bottom: 0;
+	position: absolute;
+	font-size: 1rem;
 }
 /*#endregion*/
 
