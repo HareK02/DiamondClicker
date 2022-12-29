@@ -128,6 +128,7 @@ Game.Launch = () => {
 
         Game.Click = () => {
             Game.PlaySound(Game.ClickSounds[Math.floor(Math.random() * (Game.ClickSounds.length))])
+            //クリック時の加算、ダイヤアニメーション、パーティクル
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
@@ -136,8 +137,6 @@ Game.Launch = () => {
         addEvent(ClickableDiamond, 'mouseout', (e) => { })
         //#endregion
         
-        //要素の取得とクリックイベント
-        //施設の売買、インベントリ操作諸々
         Game.TitleText = e('BannerText')
 
         //#endregion
@@ -160,6 +159,7 @@ Game.Launch = () => {
         //#region Data of Game,prefs & I/O
         Game.products = {
             "test1": {
+                "name": "Miner",
                 "enabled": true, //表示されるか否か
                 "level": 1, //レベル0は買われてない状態
                 "data": {
@@ -183,6 +183,21 @@ Game.Launch = () => {
                 }
             }
         }
+        let parent = e("Products")
+        parent.innerHTML = (function(){
+            let str = ""
+            for (let key of Object.keys(Game.products)) {
+                str +=
+               `<div class="prod-item" id="prod-${key}">
+                   <div class="prod-cover">
+                       <div class="prod-title"> ${Game.products[key].name} | per second: 2,345 </div>
+                       <div class="prod-upgrade"> アップグレード </div>
+                   </div>
+                </div>`
+            }
+            return str
+        }())
+        
 
         Game.prefs = []
         Game.prefsItems = [ //項目と並びの定義
@@ -269,6 +284,7 @@ Game.Launch = () => {
             data && Game.WriteSave()
         }
         //#endregion
+
         Game.tps = 30
         Game.tickManager = new GameLoopManager(() => {
             Game.Update()
@@ -311,12 +327,6 @@ Game.Launch = () => {
         let beautify = BeautifyNum(Game.diamonds)
         let str = beautify.i + ((beautify.d == '') ? '' : '.' + beautify.d) + beautify.f + ' million 　diamonds　'
         Game.TitleText.textContent = str
-    }
-
-    //メインループ
-    Game.Loop = () => {
-        Game.Update()
-        Game.LoopManager.done()
     }
 }
 

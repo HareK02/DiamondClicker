@@ -78,7 +78,7 @@ html {
 	align-items: center;
 }
 #BannerText {
-	max-width: 34%;
+	min-width: 34%;
 	text-align: center;
 	font-size: 2.3rem;
 }
