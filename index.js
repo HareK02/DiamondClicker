@@ -1,5 +1,3 @@
-//毎回桁数を導きだすのは如何に？(負荷的に)
-
 //#region regular functions
 let e = id => {
     return document.getElementById(id)
@@ -71,6 +69,13 @@ let Langs = {
     'JA_JP': { nameEN: 'Japanese', name: '日本語' }
 } // 予定はこの二言語だけ
 
+let Sounds = {
+    "list":[],
+    "instances":[],
+    "i":0
+}
+for (var i=0;i<16;i++){Sounds.instances[i]=new Audio();}
+
 //#region game usualy function
 
 //桁数とフォーマッタのIndexを返す
@@ -92,21 +97,37 @@ let BeautifyNum = (value, scale = -1) => {
 
 let Game = {}
 Game.Launch = () => {
-
     Game.Init = {} //初期化関数
     //ゲームの機能自体はここに書いていく
     Game.Init = () => {
         Game.diamonds = BigInt('0')
 
+        //#region GUI
+
         //#region Click handling
         Game.ClickableDiamond = e('ClickableDiamond')
-        Game.ClickSounds = []
-        let sounds = e('ClickSounds').children
-        for (let i = 0; i < sounds.length; i++) {
-            Game.ClickSounds[i] = sounds[i]
+        Game.ClickSounds = ["./assets/sounds/dig0.mp3","./assets/sounds/dig1.mp3","./assets/sounds/dig2.mp3"]
+        Game.PlaySound = (url) => {
+            if (typeof Sounds.list[url]==='undefined')
+            {
+                Sounds.list[url]=new Audio(url);
+                Sounds.list[url].onloadeddata=(e) => {
+                    console.log(url)
+                    Game.PlaySound(url)
+                }
+            }
+            else if (Sounds.list[url].readyState>=2 && Sounds.instances[Sounds.i].paused)
+            {
+                let sound=Sounds.instances[Sounds.i];
+                Sounds.i++;
+                if (Sounds.i>=16) Sounds.i=0;
+                sound.src=Sounds.list[url].src;
+                try{sound.play();}catch(e){}
+            }
         }
+
         Game.Click = () => {
-            Game.ClickSounds[Math.floor(Math.random() * (Game.ClickSounds.length + 1))].play()
+            Game.PlaySound(Game.ClickSounds[Math.floor(Math.random() * (Game.ClickSounds.length))])
         }
         addEvent(ClickableDiamond, 'click', Game.Click)
         addEvent(ClickableDiamond, 'mousedown', (e) => { })
@@ -114,9 +135,7 @@ Game.Launch = () => {
         addEvent(ClickableDiamond, 'mouseover', (e) => { })
         addEvent(ClickableDiamond, 'mouseout', (e) => { })
         //#endregion
-
-        //#region GUI
-
+        
         //要素の取得とクリックイベント
         //施設の売買、インベントリ操作諸々
         Game.TitleText = e('BannerText')
